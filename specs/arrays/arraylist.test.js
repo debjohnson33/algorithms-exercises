@@ -1,16 +1,16 @@
 /*
   ArrayList
-  
+
   We are going to approximate an implementation of ArrayList. In JavaScript terms, that means we are
   going to implement an array using objects. You should not use arrays at all in this exercise, just
   objects. Make a class (or constructor function; something you can call new on) called ArrayList.
   ArrayList should have the following properties (in addition to whatever properties you create):
-  
+
   length - integer  - How many elements in the array
   push   - function - accepts a value and adds to the end of the list
   pop    - function - removes the last value in the list and returns it
   get    - function - accepts an index and returns the value at that position
-  delete - function - accepts an index, removes value from list, collapses, 
+  delete - function - accepts an index, removes value from list, collapses,
                       and returns removed value
 
   As always, you can change describe to xdescribe to prevent the unit tests from running while
@@ -19,11 +19,47 @@
 
 class ArrayList {
   // code goes here
+  constructor () {
+    this.length = 0;
+    this.storage = {};
+  }
+  push(value) {
+    // add to end of array
+    this.storage[this.length] = value;
+    this.length++;
+  }
+
+  pop() {
+    // remove from end of array and return it
+    let element = this.storage[this.length - 1];
+    delete this.storage[this.length - 1];
+    this.length--;
+    return element;
+  }
+
+  get(index) {
+    // return value at index
+    return this.storage[index];
+  }
+
+  delete(index) {
+    // remove value at index and shift items in array
+    let element = this.storage[index];
+    delete this.storage[index];
+    this.length--;
+    for (let i = index; i < this.length; i++) {
+      if (i > index) {
+        this.storage[i - 1] = this.storage[i];
+        delete this.storage[i];
+      }
+    }
+    return element;
+  }
 }
 
 // unit tests
 // do not modify the below code
-describe.skip("ArrayList", function () {
+describe("ArrayList", function () {
   const range = (length) =>
     Array.apply(null, { length: length }).map(Number.call, Number);
   const abcRange = (length) =>
